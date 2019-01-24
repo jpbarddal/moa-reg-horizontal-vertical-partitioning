@@ -305,7 +305,9 @@ public class FIMTDD extends AbstractClassifier implements Regressor {
 					}
 				}
 				if (obs != null) {
-					obs.observeAttributeClass(inst.value(instAttIndex), inst.classValue(), inst.weight());
+					if(!inst.isMissing(instAttIndex)) {
+						obs.observeAttributeClass(inst.value(instAttIndex), inst.classValue(), inst.weight());
+					}
 				}
 			}
 
@@ -736,6 +738,7 @@ public class FIMTDD extends AbstractClassifier implements Regressor {
 	 * Method for updating (training) the model using a new instance
 	 */
 	public void trainOnInstanceImpl(Instance inst) {
+		// System.out.println(inst);
 		checkRoot();
 
 		examplesSeen += inst.weight();
@@ -917,7 +920,7 @@ public class FIMTDD extends AbstractClassifier implements Regressor {
 		// make two new branches leading to (empty) leaves
 		if (shouldSplit) {
 			AttributeSplitSuggestion splitDecision = bestSplitSuggestions[bestSplitSuggestions.length - 1];
-
+			// System.out.println("SPLITTING ON ATT" + splitDecision.splitTest.getAttsTestDependsOn()[0]);
 			SplitNode newSplit = newSplitNode(splitDecision.splitTest);
 			newSplit.copyStatistics(node);
 			newSplit.changeDetection = node.changeDetection;
